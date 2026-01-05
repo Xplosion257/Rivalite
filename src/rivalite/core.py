@@ -5,6 +5,14 @@ These core utilities support the rest of the library. The functions here are des
 """
 
 from pathlib import Path
+import importlib
+import pydoc
+
+class PrivateFileError(Exception):
+    """
+    Occurs when trying to use about() on a private file
+    """
+    pass
 
 def ensure_list(value):
     """
@@ -24,17 +32,27 @@ def ensure_list(value):
     else:
         return [value]
 
-def about():
+def about(module=None):
     """
-    Returns a list of all available modules
+    Returns a list of all available modules if module is left None. Otherwise, it will go into detail on a module.
+    Use help(rivalite) for the package itself
     """
 
-    package_dir = Path(__file__).parent
-    files = [p.name for p in package_dir.iterdir()]
-    for f in files[:]:
-        if f.startswith("_"):
-            files.remove(f)
-    for i, f in enumerate(files):
-        files[i] = f[:-3]
-    return files
+    if module is None:
+        package_dir = Path(__file__).parent
+        files = [p.name for p in package_dir.iterdir()]
+        for f in files[:]:
+            if f.startswith("_"):
+                files.remove(f)
+        for i, f in enumerate(files):
+            files[i] = f[:-3]
+        return files
 
+    module = str(module).strip()
+
+    if module.startswith("_"):
+        raise PrivateFileError(f"can't access {module}.py due to the file being private.")
+
+    pkg = importlib.import_module(f"rivalite.{module}")
+    render = pydoc.render_doc(pkg)
+    return render
