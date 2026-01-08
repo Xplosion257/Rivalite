@@ -7,6 +7,7 @@ These core utilities support the rest of the library. The functions here are des
 from pathlib import Path
 import importlib
 import pydoc
+import time
 
 class PrivateFileError(Exception):
     """
@@ -56,3 +57,30 @@ def about(module=None):
     pkg = importlib.import_module(f"rivalite.{module}")
     render = pydoc.render_doc(pkg)
     return render
+
+def flatten(nested_lists: list):
+    """
+    Flattens out nested lists.
+    """
+
+    returned_list = []
+
+    if not isinstance(nested_lists, list):
+        raise TypeError("argument nested_lists must be of list type")
+
+    def _flatten(nested_list):
+        for i in nested_list:
+            if isinstance(i, list):
+                yield from _flatten(i)
+            else:
+                yield i
+
+    returned_list = list(_flatten(nested_lists))
+
+    return returned_list
+
+def wait(seconds):
+    """
+    Effectively the same as time.sleep(seconds)
+    """
+    time.sleep(seconds)
