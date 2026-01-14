@@ -36,7 +36,7 @@ def ensure_list(value):
 def about(module=None):
     """
     Returns a list of all available modules if module is left None. Otherwise, it will go into detail on a module.
-    Use help(rivalite) for the package itself
+    The module it specifies on can be any module, including modulesoutside of rivalite.
     """
 
     if module is None:
@@ -54,7 +54,7 @@ def about(module=None):
     if module.startswith("_"):
         raise PrivateFileError(f"can't access {module}.py due to the file being private.")
 
-    pkg = importlib.import_module(f"rivalite.{module}")
+    pkg = importlib.import_module(module)
     render = pydoc.render_doc(pkg)
     return render
 

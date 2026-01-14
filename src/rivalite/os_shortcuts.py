@@ -15,9 +15,8 @@ def clear():
 
 def stdout(command):
     """
-    Returns the output of the command given, the command should be given in a list where every space is a seperator.
-    For example, echo hello world becomes [\"echo\", \"hello\", \"world\"]
+    Returns the output of the command given and is effectively the same as subprocess.run(command, text=True, capture_output=True, shell=True).stdout
     """
 
-    result = subprocess.run(command, text=True, capture_output=True)
+    result = subprocess.run(command, text=True, capture_output=True, shell=True)
     return result.stdout
